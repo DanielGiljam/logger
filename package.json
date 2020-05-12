@@ -1,0 +1,11 @@
+{
+  "name": "@danielgiljam/logger",
+  "version": "0.0.0",
+  "description": "Quickly set up logging with my opinionated logging library.",
+  "homepage": "https://github.com/DanielGiljam/logger#readme",
+  "bugs": "https://github.com/DanielGiljam/logger/issues",
+  "license": "MIT",
+  "private": true,
+  "author": "Daniel Giljam (https://github.com/DanielGiljam)",
+  "repository": "github:DanielGiljam/logger"
+}
