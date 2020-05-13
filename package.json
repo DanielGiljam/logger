@@ -7,5 +7,38 @@
   "license": "MIT",
   "private": true,
   "author": "Daniel Giljam (https://github.com/DanielGiljam)",
-  "repository": "github:DanielGiljam/logger"
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": "github:DanielGiljam/logger",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test-in-browser": "npm run build && next",
+    "tsc": "tsc",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
+    "format": "prettier-eslint --write \"PWD/**/*.{js,jsx,ts,tsx,json}\"",
+    "tlf": "npm run tsc && npm run lint && npm run format"
+  },
+  "devDependencies": {
+    "@danielgiljam/eslint-config": "^1.0.0",
+    "@types/node": "^14.0.1",
+    "@types/react": "^16.9.35",
+    "@typescript-eslint/eslint-plugin": "^2.31.0",
+    "@typescript-eslint/parser": "^2.31.0",
+    "eslint": "^6.8.0",
+    "eslint-config-standard": "^14.1.1",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.19.0",
+    "eslint-plugin-standard": "^4.0.1",
+    "next": "^9.4.0",
+    "prettier": "^2.0.5",
+    "prettier-eslint": "^9.0.1",
+    "prettier-eslint-cli": "^5.0.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "typescript": "^3.8.3",
+    "winston": "^3.2.1",
+    "winston-transport": "^4.3.0"
+  }
 }

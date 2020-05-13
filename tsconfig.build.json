@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "esModuleInterop": true
+  },
+  "exclude": ["node_modules", "lib", "next-env.d.ts", "pages"]
+}
