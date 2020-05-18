@@ -1,5 +1,13 @@
-// TODO: highest level
-export const highestLevel = ""
+export const highestLevel = "trace"
 
-// TODO: levels
-export default {}
+const levels = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  debug: 3,
+  trace: 4,
+}
+
+export type Levels = keyof typeof levels
+
+export default levels
