@@ -13,7 +13,7 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "test-in-browser": "npm run build && next",
-    "tsc": "tsc",
+    "tsc": "tsc  -p tsconfig.build.json --noEmit",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "format": "prettier-eslint --write \"PWD/**/*.{js,jsx,ts,tsx,json}\"",
     "tlf": "npm run tsc && npm run lint && npm run format"
@@ -31,12 +31,14 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.19.0",
     "eslint-plugin-standard": "^4.0.1",
+    "logform": "^2.1.2",
     "next": "^9.4.0",
     "prettier": "^2.0.5",
     "prettier-eslint": "^9.0.1",
     "prettier-eslint-cli": "^5.0.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
+    "triple-beam": "^1.3.0",
     "typescript": "^3.8.3",
     "winston": "^3.2.1",
     "winston-transport": "^4.3.0"
