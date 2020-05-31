@@ -1,3 +1,5 @@
+import {SPLAT} from "triple-beam"
+
 import {Levels} from "../../levels"
 
 import BrowserConsole, {BrowserConsoleFunction} from "./index"
@@ -16,7 +18,7 @@ const functions: {[K in Levels]: BrowserConsoleFunction} = {
   },
 
   debug(this: BrowserConsole, info) {
-    console.log(info)
+    console.log(info.message, ...info[SPLAT])
   },
 
   assert(this: BrowserConsole) {

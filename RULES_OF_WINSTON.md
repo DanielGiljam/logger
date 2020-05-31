@@ -122,3 +122,26 @@ const infoObject = {
   Symbol(message): `{"level":"debug","message":"Hello World","prop":"something"}`
 }
 ```
+
+The same is also true for the following scenario:
+
+```ts
+logger.debug("Hello", { message: " World!" });
+```
+
+The `info` object:
+
+```ts
+const infoObject = {
+  level: "debug",
+  message: "Hello World!",
+  Symbol(level): "debug",
+  Symbol(message): `{"level":"debug","message":"Hello World"}`
+}
+```
+
+## Formats
+
+A list of miscellaneous things regarding [formats](https://github.com/winstonjs/winston#formats).
+
+- The [`errors` format](https://github.com/winstonjs/logform#errors) is only available in a server-side (Node.js) environment.

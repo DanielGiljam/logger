@@ -6,8 +6,8 @@ import Transport from "winston-transport"
 
 export type Info<
   LVL extends string,
-  META extends object = {},
-  MSG extends any = string
+  META extends {[key: string]: any} = {[key: string]: any},
+  MSG = any
 > = {
   level: string;
   message: string;

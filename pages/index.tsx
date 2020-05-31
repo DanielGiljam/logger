@@ -1,8 +1,8 @@
-import createLogger from "../lib"
-import {Levels} from "../lib/levels"
-import {Logger} from "../lib/types/winston"
+import createLogger from "../src"
+import {Levels} from "../src/levels"
+import {Logger} from "../src/types/winston"
 
-const logger = createLogger()
+const logger = createLogger({label: "My Label"})
 
 const someOtherArguments1 = [
   typeof FileReader !== "undefined" ? new FileReader() : {},
@@ -203,6 +203,8 @@ logger.groupEnd()
 
 // logger.http("This should not be a function")
 // logger.clear()
+
+logger.debug("This is a %s test", "fucking")
 
 const Index = (): JSX.Element => {
   return <h1>Logger Test In Browser</h1>
