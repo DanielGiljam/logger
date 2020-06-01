@@ -11,8 +11,8 @@
   "types": "lib/index.d.ts",
   "repository": "github:DanielGiljam/logger",
   "scripts": {
+    "dev": "next",
     "build": "tsc -p tsconfig.build.json",
-    "test-in-browser": "npm run build && next",
     "tsc": "tsc  -p tsconfig.build.json --noEmit",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx .",
     "format": "prettier-eslint --write \"PWD/**/*.{js,jsx,ts,tsx,json}\"",

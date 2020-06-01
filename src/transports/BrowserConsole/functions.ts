@@ -1,67 +1,74 @@
 import {SPLAT} from "triple-beam"
 
-import {Levels} from "../../levels"
+import {Level} from "./levels"
 
-import BrowserConsole, {BrowserConsoleFunction} from "./index"
+import {BrowserConsoleFunction} from "./index"
 
-const functions: {[K in Levels]: BrowserConsoleFunction} = {
-  error(this: BrowserConsole, info) {
-    console.error(info)
+const functions: {[K in Level]: BrowserConsoleFunction} = {
+  error(info) {
+    // TODO: implement handling of Error objects
+    console.error(info.message, ...info[SPLAT])
   },
-
-  warn(this: BrowserConsole, info) {
-    console.warn(info)
+  warn(info) {
+    console.warn(info.message, ...info[SPLAT])
   },
-
-  info(this: BrowserConsole, info) {
-    console.info(info)
+  info(info) {
+    console.info(info.message, ...info[SPLAT])
   },
-
-  debug(this: BrowserConsole, info) {
+  debug(info) {
     console.log(info.message, ...info[SPLAT])
   },
-
-  assert(this: BrowserConsole) {
-    // TODO: implement assert function
+  assert(info) {
+    if (typeof info.assertion !== "undefined") {
+      console.assert(info.assertion, info.message, ...info[SPLAT])
+    } else {
+      console.assert(info.message, ...info[SPLAT])
+    }
   },
-
   // TODO: figure out if clear is conflicting with winston.Logger#clear
-  clear: () => console.clear(),
-
-  count(this: BrowserConsole) {
-    // TODO: implement count function
+  clear() {
+    console.clear()
   },
-
-  countReset(this: BrowserConsole) {
-    // TODO: implement countReset function
+  count(info) {
+    console.count(info.message)
   },
-
-  group: ({message}) => console.group(message),
-
-  groupCollapsed: ({message}) => console.groupCollapsed(message),
-
-  groupEnd: () => console.groupEnd(),
-
+  countReset(info) {
+    console.countReset(info.message)
+  },
+  group(info) {
+    console.group(info.message, ...info[SPLAT])
+  },
+  groupCollapsed(info) {
+    console.groupCollapsed(info.message, ...info[SPLAT])
+  },
+  groupEnd() {
+    console.groupEnd()
+  },
   // TODO: figure out if profile and profileEnd can be integrated with winston.Logger#profile
-  profile: ({message}) => console.profile(message),
-
-  profileEnd: ({message}) => console.profileEnd(message),
-
-  table(this: BrowserConsole) {
-    // TODO: implement table function
+  profile(info) {
+    console.profile(info.message)
   },
-
+  profileEnd(info) {
+    console.profileEnd(info.message)
+  },
+  table(info) {
+    console.table(info.message, ...(info[SPLAT] || []))
+  },
   // TODO: figure out if time, timeEnd and timeLog can be integrated with winston.Logger#startTimer
-  time: ({message}) => console.time(message),
-
-  timeEnd: ({message}) => console.timeEnd(message),
-
-  timeLog: ({message}) => console.timeLog(message),
-
-  timeStamp: ({message}) => console.timeStamp(message),
-
-  trace(this: BrowserConsole, info) {
-    console.trace(info)
+  time(info) {
+    console.time(info.message)
+  },
+  timeEnd(info) {
+    console.timeEnd(info.message)
+  },
+  timeLog(info) {
+    console.timeLog(info.message)
+  },
+  timeStamp(info) {
+    console.timeStamp(info.message)
+  },
+  trace(info) {
+    console.trace(info.message, ...info[SPLAT])
   },
 }
 

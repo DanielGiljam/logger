@@ -1,210 +1,88 @@
-import createLogger from "../src"
-import {Levels} from "../src/levels"
-import {Logger} from "../src/types/winston"
+import createLogger, {Level} from "../src"
+import Logger from "../src/types/logger"
 
 const logger = createLogger({label: "My Label"})
 
-const someOtherArguments1 = [
-  typeof FileReader !== "undefined" ? new FileReader() : {},
-  21,
-  {
-    x: 342,
-    y: 215,
-  },
-  "someOtherArguments1",
-]
-
-const someOtherArguments2 = [
-  21,
-  typeof FileReader !== "undefined" ? new FileReader() : {},
-  "someOtherArguments2",
-  {
-    x: 342,
-    y: 215,
-  },
-]
-
-const someOtherArguments3 = [
-  "someOtherArguments3",
-  {
-    x: 342,
-    y: 215,
-  },
-  typeof FileReader !== "undefined" ? new FileReader() : {},
-  21,
-]
-
-const someOtherArguments4 = [
-  {
-    x: 342,
-    y: 215,
-  },
-  "someOtherArguments4",
-  typeof FileReader !== "undefined" ? new FileReader() : {},
-  21,
-]
-
-const basicTests = (logger: Logger, level: Levels): void => {
+const basicTests = (
+  logger: Logger,
+  level: Exclude<
+    Level,
+    | "assert"
+    | "clear"
+    | "groupEnd"
+    | "profile"
+    | "profileEnd"
+    | "table"
+    | "time"
+    | "timeLog"
+    | "timeEnd"
+    | "timeStamp"
+  >,
+): void => {
+  logger.groupCollapsed(`Basic tests for level "${level}"`)
   logger[level](`This is a "${level}" message`)
   logger[level](
-    `This is a "${level}" message + some other arguments 1`,
-    ...someOtherArguments1,
+    `This is a "${level}" message that uses %s interpolation (%d times)`,
+    "string",
+    2,
+  )
+  logger[
+    level
+  ](
+    `This is a "${level}" message that uses %s interpolation (%d times) and has additional arguments`,
+    "string",
+    2,
+    24,
+    {x: 256, y: 128},
   )
   logger[level](
-    `This is a "${level}" message + some other other arguments 2`,
-    ...someOtherArguments2,
+    `This is a "${level}" message that uses %s interpolation (%d times) and has additional arguments and where the first additional argument is an object literal`,
+    "string",
+    2,
+    {x: 256, y: 128},
+    "test",
+    false,
   )
   logger[level](
-    `This is a "${level}" message + some other other other arguments 3`,
-    ...someOtherArguments3,
+    `This is a "${level}" message that has additional arguments and where the first additional argument is an object literal`,
+    {x: 256, y: 128},
+    "test",
+    12416,
   )
   logger[level](
-    `This is a "${level}" message + some other other other other arguments 4`,
-    ...someOtherArguments4,
-  )
-  logger[level](...someOtherArguments1)
-  logger[level](...someOtherArguments2)
-  logger[level](...someOtherArguments3)
-  logger[level](...someOtherArguments4)
-  logger[level]({
-    prop: "customObjectProperty",
-    message: "The log function was called with one object literal argument",
-  })
-  logger[level]({prop: "customObjectProperty", prop2: "customObjectProperty2"})
-  logger[level](
-    {
-      prop: "customObjectProperty",
-      message: "The log function was called with one object literal argument",
-    },
-    "otherStuff",
+    `This is a "${level}" message that has additional arguments`,
+    24,
+    {x: 256, y: 128},
+    "test",
+    12416,
   )
   logger[level](
-    {prop: "customObjectProperty", prop2: "customObjectProperty2"},
-    "otherStuff",
+    `The following message is level "${level}" and was sent a single non-string value as argument`,
   )
+  logger[level](12416)
+  logger[level](
+    `The following message is level "${level}" and was sent multiple non-string value as arguments`,
+  )
+  logger[level](12416, {x: 256, y: 128}, "test", [false, true])
+  logger[level](
+    `The following message is level "${level}" and was sent a single object as argument`,
+  )
+  logger[level]({x: 256, y: 128})
+  logger[level](
+    `The following message is level "${level}" and was sent multiple objects as arguments`,
+  )
+  logger[level]({x: 256, y: 128}, {xy: [256, 128], z: 0})
+  logger.groupEnd()
 }
 
-// #region ERROR
-
-logger.groupCollapsed("error")
-basicTests(logger, "error")
-logger.error(new Error("This is an Error object"))
-logger.error(
-  new Error("This is an Error object + some other arguments 1"),
-  ...someOtherArguments1,
-)
-logger.error(
-  new Error("This is an Error object + some other arguments 2"),
-  ...someOtherArguments2,
-)
-logger.error(
-  new Error("This is an Error object + some other arguments 3"),
-  ...someOtherArguments3,
-)
-logger.error(
-  new Error("This is an Error object + some other arguments 4"),
-  ...someOtherArguments4,
-)
-logger.groupEnd()
-
-// #endregion
-
-// #region WARN
-
-logger.groupCollapsed("warn")
-basicTests(logger, "warn")
-logger.groupEnd()
-
-// #endregion
-
-// #region INFO
-
-logger.groupCollapsed("info")
-basicTests(logger, "info")
-logger.groupEnd()
-
-// #endregion
-
-// #region DEBUG
-
-logger.groupCollapsed("debug")
-basicTests(logger, "debug")
-logger.groupEnd()
-
-// #endregion
-
-// #region ASSERT
-
-// TODO: implement tests for logger.assert
-
-// #endregion
-
-// #region COUNT
-
-// TODO: implement tests for logger.count
-
-// #endregion
-
-// #region COUNT_RESET
-
-// TODO: implement tests for logger.countReset
-
-// #endregion
-
-// #region PROFILE
-
-// TODO: implement tests for logger.profile
-
-// #endregion
-
-// #region PROFILE_END
-
-// TODO: implement tests for logger.profileEnd
-
-// #endregion
-
-// #region TABLE
-
-// TODO: implement tests for logger.table
-
-// #endregion
-
-// #region TIME
-
-// TODO: implement tests for logger.time
-
-// #endregion
-
-// #region TIME_END
-
-// TODO: implement tests for logger.timeEnd
-
-// #endregion
-
-// #region TIME_LOG
-
-// TODO: implement tests for logger.timeLog
-
-// #endregion
-
-// #region TIMESTAMP
-
-// TODO: implement tests for logger.timeStamp
-
-// #endregion
-
-// #region TRACE
-
-logger.groupCollapsed("trace")
-basicTests(logger, "trace")
-logger.groupEnd()
-
-// #endregion
-
-// logger.http("This should not be a function")
-// logger.clear()
-
-logger.debug("This is a %s test", "fucking")
+if (typeof window !== "undefined") {
+  logger.clear()
+  basicTests(logger, "error")
+  basicTests(logger, "warn")
+  basicTests(logger, "info")
+  basicTests(logger, "debug")
+  basicTests(logger, "trace")
+}
 
 const Index = (): JSX.Element => {
   return <h1>Logger Test In Browser</h1>

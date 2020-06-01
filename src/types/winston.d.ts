@@ -5,20 +5,20 @@ import winston from "winston"
 import Transport from "winston-transport"
 
 export type Info<
-  LVL extends string,
-  META extends {[key: string]: any} = {[key: string]: any},
-  MSG = any
+  L extends string,
+  MS = any,
+  ME extends {[key: string]: any} = {[key: string]: any}
 > = {
   level: string;
   message: string;
-  LEVEL_SYMBOL: LVL;
-  MESSAGE_SYMBOL: MSG;
+  LEVEL_SYMBOL: L;
+  MESSAGE_SYMBOL: MS;
   SPLAT_SYMBOL: any[];
 } & {
-  [K in keyof META]: META[K]
+  [K in keyof ME]: ME[K]
 }
 
-export class Logger extends Transform {
+export class CustomWinstonLogger extends Transform {
   silent: boolean
   format: logform.Format
   levels: winston.config.AbstractConfigSetLevels
@@ -29,10 +29,11 @@ export class Logger extends Transform {
   exitOnError: Function | boolean
 
   log: winston.LogMethod
-  add(transport: Transport): Logger
-  remove(transport: Transport): Logger
-  clear(): Logger
-  close(): Logger
+  add(transport: Transport): CustomWinstonLogger
+  remove(transport: Transport): CustomWinstonLogger
+  // NOTE: see TODO about clear()
+  // clear(): CustomWinstonLogger
+  close(): CustomWinstonLogger
 
   // for browser console levels
   error: winston.LeveledLogMethod
@@ -40,6 +41,7 @@ export class Logger extends Transform {
   info: winston.LeveledLogMethod
   debug: winston.LeveledLogMethod
   assert: winston.LeveledLogMethod
+  clear: winston.LeveledLogMethod
   count: winston.LeveledLogMethod
   countReset: winston.LeveledLogMethod
   group: winston.LeveledLogMethod
@@ -62,9 +64,10 @@ export class Logger extends Transform {
   stream(options?: any): NodeJS.ReadableStream
 
   startTimer(): winston.Profiler
-  profile(id: string | number, meta?: winston.LogEntry): Logger
+  // NOTE: see TODO about profile()
+  // profile(id: string | number, meta?: winston.LogEntry): CustomWinstonLogger
 
   configure(options: winston.LoggerOptions): void
 
-  child(options: Record<string, any>): Logger
+  child(options: Record<string, any>): CustomWinstonLogger
 }
