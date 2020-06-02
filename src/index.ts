@@ -1,56 +1,35 @@
 import winston from "winston"
-import Transport from "winston-transport"
 
-import clientSideLoggerHandler from "./clientSideLoggerHandler"
-import BrowserConsole from "./transports/BrowserConsole"
-import browserConsoleFormat from "./transports/BrowserConsole/format"
-import browserConsoleLevels, {
-  Level as BrowserConsoleLevels,
-} from "./transports/BrowserConsole/levels"
-import Logger from "./types/logger"
-import {CustomWinstonLogger} from "./types/winston"
+import Logger, {FunctionMap} from "./types/logger"
 
-interface LoggerOptions {
-  level?: Level;
-  label?: string;
-  serverSideTransports?: Transport | Transport[];
-  clientSideTransports?: Transport | Transport[];
-  detectEnvironment?: () => "server-side" | "client-side";
+interface EnvironmentSpecificLoggerOptions {
+  loggerOptions?: winston.LoggerOptions;
+  proxyHandler?: ProxyHandler<winston.Logger>;
 }
 
-export type Level = BrowserConsoleLevels
+interface LoggerOptions {
+  detectEnvironment?: () => "server-side" | "client-side";
+  serverSide?: EnvironmentSpecificLoggerOptions;
+  clientSide?: EnvironmentSpecificLoggerOptions;
+}
 
-// TODO: figure out how to make library entry point (createLogger) as bare as possible
-const createLogger = ({
-  level,
-  label,
+const createLogger = <L extends string, FM extends FunctionMap<L>>({
   detectEnvironment,
-}: LoggerOptions = {}): Logger => {
+  serverSide,
+  clientSide,
+}: LoggerOptions = {}): Logger<L, FM> => {
   // TODO: implement a default detect environment
   const environment = detectEnvironment?.() || "client-side"
   if (environment === "server-side") {
-    return (undefined as unknown) as Logger
+    return (new Proxy(
+      winston.createLogger(serverSide?.loggerOptions),
+      serverSide?.proxyHandler || {},
+    ) as unknown) as Logger<L, FM>
   } else {
     return (new Proxy(
-      (winston.createLogger({
-        level: ((): Level => {
-          // TODO: implement function that calculates highest of all levels
-          return level || "trace"
-        })(),
-        levels: {...browserConsoleLevels},
-        transports: new BrowserConsole({
-          format: winston.format.combine(
-            winston.format.label({label}),
-            winston.format.timestamp({
-              format: "THH:MM:ss.SSS",
-              alias: "time",
-            }),
-            browserConsoleFormat(),
-          ),
-        }),
-      }) as unknown) as CustomWinstonLogger,
-      clientSideLoggerHandler,
-    ) as unknown) as Logger
+      winston.createLogger(clientSide?.loggerOptions),
+      clientSide?.proxyHandler || {},
+    ) as unknown) as Logger<L, FM>
   }
 }
 

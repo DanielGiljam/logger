@@ -1,14 +1,31 @@
-import createLogger, {Level} from "../src"
+import createLogger from "../src"
+import BrowserConsole from "../src/transports/BrowserConsole"
+import defaultOptions from "../src/transports/BrowserConsole/defaults/defaultOptions"
+import {FunctionMap} from "../src/transports/BrowserConsole/functions"
+import levels, {
+  Level,
+  highestLevel,
+} from "../src/transports/BrowserConsole/levels"
 import Logger from "../src/types/logger"
 
-const logger = createLogger({label: "My Label"})
+const logger = createLogger<Level, FunctionMap>({
+  clientSide: {
+    loggerOptions: {
+      level: highestLevel,
+      levels,
+      transports: new BrowserConsole(defaultOptions()),
+    },
+  },
+})
 
 const basicTests = (
-  logger: Logger,
+  logger: Logger<Level, FunctionMap>,
   level: Exclude<
     Level,
     | "assert"
     | "clear"
+    | "count"
+    | "countReset"
     | "groupEnd"
     | "profile"
     | "profileEnd"

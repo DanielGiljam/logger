@@ -1,36 +1,37 @@
 import {LEVEL} from "triple-beam"
-import Transport from "winston-transport"
+import Transport, {TransportStreamOptions} from "winston-transport"
 
-import {Info} from "../../types/winston"
+import Info from "../../types/info"
 
-import functions from "./functions"
-import {Level} from "./levels"
+export type BrowserConsoleFunction<L extends string> = (
+  this: BrowserConsole<L>,
+  info: Info<L>
+) => void
 
-export type BrowserConsoleFunction<
-  L extends Level = Level,
-  MS = any,
-  ME extends object = {[key: string]: any}
-> = (this: BrowserConsole, info: Info<L, MS, ME>) => void
+export type BrowserConsoleOptions<L extends string> = TransportStreamOptions & {
+  functions: {[K in L]: BrowserConsoleFunction<L>};
+}
 
-class BrowserConsole extends Transport {
-  public log(info: Info<Level>, callback: () => void): void {
+class BrowserConsole<L extends string> extends Transport {
+  private readonly _functionsMap: Map<L, BrowserConsoleFunction<L>>
+
+  constructor(opts?: BrowserConsoleOptions<L>) {
+    super(opts)
+    this._functionsMap = new Map<L, BrowserConsoleFunction<L>>(
+      Object.entries(opts?.functions || {}) as Iterable<
+        readonly [L, BrowserConsoleFunction<L>]
+      >,
+    )
+  }
+
+  public log(info: Info<L>, callback: () => void): void {
     setImmediate(() => {
       this.emit("logged", info)
     })
-    const func = BrowserConsole._FUNCTIONS_MAP.get(info[LEVEL])
+    const func = this._functionsMap.get(info[LEVEL])
     if (func) func.call(this, info)
     callback()
   }
-
-  // TODO: research if there's a cleaner way to initialize a Map
-  private static readonly _FUNCTIONS_MAP = new Map<
-    Level,
-    BrowserConsoleFunction
-  >(
-    Object.entries(functions) as Iterable<
-      readonly [Level, BrowserConsoleFunction]
-    >,
-  )
 }
 
 export default BrowserConsole

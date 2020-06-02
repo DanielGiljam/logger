@@ -1,8 +1,25 @@
 import {LEVEL} from "triple-beam"
 
-import {Options} from "./format"
-import {Level} from "./levels"
+import {Options} from "../format"
+import {Level} from "../levels"
 
+import defaultColors from "./defaultColors"
+
+const nonSplattableLevels: Level[] = [
+  "profile",
+  "profileEnd",
+  "table",
+  "time",
+  "timeLog",
+  "timeEnd",
+  "timeStamp",
+]
+const nonStylableLevels: Level[] = [
+  "count",
+  "countReset",
+  ...nonSplattableLevels,
+]
+const parts: Part[] = ["level", "time", "label", "message"]
 const levelsThatShouldBePrintedAsDebug: Level[] = [
   "assert",
   "count",
@@ -23,8 +40,20 @@ const printAsDebugPattern = new RegExp(
 const getPrintableLevel = (level: Level): string =>
   printAsDebugPattern.test(level) ? "DEBUG" : level.toUpperCase()
 
-const defaultFormatOptions = (colors: Options["colors"]): Options => ({
+export type Part = "level" | "time" | "label" | "message"
+
+export interface DefaultFormatOptionsParameters {
+  colors?: Options<Level, Part>["colors"];
+  printLevel?: boolean;
+  printTimestamp?: boolean;
+}
+
+const defaultFormatOptions = ({
   colors,
+  printLevel,
+  printTimestamp,
+}: DefaultFormatOptionsParameters): Options<Level, Part> => ({
+  colors: colors || defaultColors,
   format: {
     level: (info, opts): string =>
       opts.printLevel ? getPrintableLevel(info[LEVEL]) + " " : "",
@@ -50,8 +79,11 @@ const defaultFormatOptions = (colors: Options["colors"]): Options => ({
         ? `color: ${opts.colors[info[LEVEL]]?.message}`
         : "",
   },
-  printLevel: false,
-  printTimestamp: true,
+  printLevel,
+  printTimestamp,
+  nonSplattableLevels,
+  nonStylableLevels,
+  parts,
 })
 
 export default defaultFormatOptions
