@@ -68,6 +68,7 @@ export interface Options<L extends string, P extends string> {
   parts?: (P | "message")[];
 }
 
+// TODO: check type of info.message before assuming it's a string
 const browserConsoleFormat = format((info, opts: Options<string, string>) => {
   if (getDoNotSplatPattern(opts.nonSplattableLevels).test(info[LEVEL])) {
     return info

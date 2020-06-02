@@ -13,6 +13,7 @@ interface DefaultOptionsParameters {
   defaultFormatOptions?: DefaultFormatParameters;
 }
 
+// TODO: create a merge function that merges specified options with the default set
 const defaultOptions = ({
   level,
   silent,
