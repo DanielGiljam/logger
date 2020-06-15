@@ -10,7 +10,7 @@ interface DefaultOptionsParameters {
   level?: Level;
   silent?: boolean;
   format?: Format;
-  defaultFormatOptions?: DefaultFormatParameters;
+  defaultFormatParameters?: DefaultFormatParameters;
 }
 
 // TODO: create a merge function that merges specified options with the default set
@@ -18,11 +18,11 @@ const defaultOptions = ({
   level,
   silent,
   format,
-  defaultFormatOptions,
+  defaultFormatParameters,
 }: DefaultOptionsParameters = {}): BrowserConsoleOptions<Level> => ({
   level,
   silent,
-  format: format || defaultFormat(defaultFormatOptions),
+  format: format || defaultFormat(defaultFormatParameters),
   functions,
 })
 

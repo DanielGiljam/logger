@@ -14,6 +14,8 @@ export interface DefaultFormatParameters {
   timestampFormat?: string;
   browserConsoleFormatOptions?: Options<Level, Part>;
   colors?: DefaultFormatOptionsParameters["colors"];
+  printLevel?: boolean;
+  printTimestamp?: boolean;
 }
 
 const defaultFormat = ({
@@ -21,6 +23,8 @@ const defaultFormat = ({
   timestampFormat,
   browserConsoleFormatOptions,
   colors,
+  printLevel,
+  printTimestamp,
 }: DefaultFormatParameters = {}): Format =>
   format.combine(
     format.label({label}),
@@ -32,6 +36,9 @@ const defaultFormat = ({
       browserConsoleFormatOptions ||
         defaultBrowserConsoleFormatOptions({
           colors: colors || browserConsoleColors,
+          printLevel: typeof printLevel !== "undefined" ? printLevel : true,
+          printTimestamp:
+            typeof printTimestamp !== "undefined" ? printTimestamp : true,
         }),
     ),
   )

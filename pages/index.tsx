@@ -1,5 +1,6 @@
 import createLogger from "../src"
 import BrowserConsole from "../src/transports/BrowserConsole"
+import defaultFormat from "../src/transports/BrowserConsole/defaults/defaultFormat"
 import defaultOptions from "../src/transports/BrowserConsole/defaults/defaultOptions"
 import {FunctionMap} from "../src/transports/BrowserConsole/functions"
 import levels, {
@@ -13,7 +14,11 @@ const logger = createLogger<Level, FunctionMap>({
     loggerOptions: {
       level: highestLevel,
       levels,
-      transports: new BrowserConsole(defaultOptions()),
+      transports: new BrowserConsole(
+        defaultOptions({
+          format: defaultFormat({label: "Test"}),
+        }),
+      ),
     },
   },
 })
