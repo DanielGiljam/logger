@@ -68,12 +68,9 @@ export interface Options<L extends string, P extends string> {
   parts?: (P | "message")[];
 }
 
-// TODO: check type of info.message before assuming it's a string
+// TODO: fix whitespacing of parts in browser console transport format
 const browserConsoleFormat = format((info, opts: Options<string, string>) => {
   if (getDoNotSplatPattern(opts.nonSplattableLevels).test(info[LEVEL])) {
-    return info
-  } else if (getDoNotStylePattern(opts.nonStylableLevels).test(info[LEVEL])) {
-    splat(info as Info<string>, opts)
     return info
   } else {
     // TODO: move this piece of logic somewhere else (related to assert())
@@ -81,8 +78,18 @@ const browserConsoleFormat = format((info, opts: Options<string, string>) => {
       info.assertion = info.message
       info.message = info[SPLAT]?.shift()
     }
-    splatAndStyle(info as Info<string>, opts)
-    return info
+    if (typeof info.message !== "string") {
+      if (!info[SPLAT]) info[SPLAT] = []
+      info[SPLAT].splice(0, 0, info.message)
+      info.message = ""
+    }
+    if (getDoNotStylePattern(opts.nonStylableLevels).test(info[LEVEL])) {
+      splat(info as Info<string>, opts)
+      return info
+    } else {
+      splatAndStyle(info as Info<string>, opts)
+      return info
+    }
   }
 }) as <L extends Level = Level, P extends Part = Part>(
   opts?: Options<L, P>
