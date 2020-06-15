@@ -47,7 +47,7 @@ const splatAndStyle = <L extends string, P extends string>(
   info[SPLAT].splice(0, 0, ...styles)
 }
 
-export type Part = "level" | "time" | "label" | "message"
+export type Part = "level" | "time" | "label" | "divider" | "message"
 
 export interface Options<L extends string, P extends string> {
   colors?: {

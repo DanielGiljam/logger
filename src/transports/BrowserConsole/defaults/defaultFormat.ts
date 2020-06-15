@@ -1,5 +1,6 @@
 import {Format, format} from "logform"
 
+// TODO: figure out why Part is being imported from the browser console transport format logic module
 import browserConsoleFormat, {Options, Part} from "../format"
 import {Level} from "../levels"
 

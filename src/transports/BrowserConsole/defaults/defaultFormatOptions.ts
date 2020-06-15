@@ -19,7 +19,7 @@ const nonStylableLevels: Level[] = [
   "countReset",
   ...nonSplattableLevels,
 ]
-const parts: Part[] = ["level", "time", "label", "message"]
+const parts: Part[] = ["level", "time", "label", "divider", "message"]
 const levelsThatShouldBePrintedAsDebug: Level[] = [
   "assert",
   "count",
@@ -40,7 +40,7 @@ const printAsDebugPattern = new RegExp(
 const getPrintableLevel = (level: Level): string =>
   printAsDebugPattern.test(level) ? "DEBUG" : level.toUpperCase()
 
-export type Part = "level" | "time" | "label" | "message"
+export type Part = "level" | "time" | "label" | "divider" | "message"
 
 export interface DefaultFormatOptionsParameters {
   colors?: Options<Level, Part>["colors"];
@@ -56,10 +56,11 @@ const defaultFormatOptions = ({
   colors: colors || defaultColors,
   format: {
     level: (info, opts): string =>
-      opts.printLevel ? getPrintableLevel(info[LEVEL]) + " " : "",
-    time: (info, opts): string => (opts.printTimestamp ? info.time + " " : ""),
-    label: (info): string => `[${info.label}] `,
-    message: (info): string => info.message,
+      opts.printLevel ? getPrintableLevel(info[LEVEL]) : "",
+    time: (info, opts): string => (opts.printTimestamp ? " " + info.time : ""),
+    label: (info): string => (info.label ? ` [${info.label}]` : ""),
+    divider: (): string => ":",
+    message: (info): string => (info.message ? " " + info.message : ""),
   },
   style: {
     level: (info, opts): string =>
@@ -73,6 +74,10 @@ const defaultFormatOptions = ({
     label: (info, opts): string =>
       opts.colors?.[info[LEVEL]]?.label
         ? `color: ${opts.colors[info[LEVEL]]?.label}`
+        : "",
+    divider: (info, opts): string =>
+      opts.colors?.[info[LEVEL]]?.divider
+        ? `color: ${opts.colors[info[LEVEL]]?.divider}`
         : "",
     message: (info, opts): string =>
       opts.colors?.[info[LEVEL]]?.message
