@@ -1,7 +1,7 @@
 {
   "name": "@danielgiljam/logger",
   "version": "0.0.0",
-  "description": "Quickly set up logging with my opinionated logging library.",
+  "description": "My logging solution for JavaScript full-stack applications.",
   "homepage": "https://github.com/DanielGiljam/logger#readme",
   "bugs": "https://github.com/DanielGiljam/logger/issues",
   "license": "MIT",
